@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laudos padrão e frases · Radiologia MSK</title>
+<meta name="description" content="Modelos de laudo e frases descritivas de radiologia musculoesquelética, prontos para copiar.">
+<meta property="og:title" content="Laudos padrão e frases · Radiologia MSK">
+<meta property="og:description" content="Modelos de laudo e frases descritivas de radiologia musculoesquelética, prontos para copiar.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&display=swap">
+<link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+
+<div class="masthead">
+  <div class="wrap">
+    <a class="brand" href="/"><b>Radiologia MSK</b> — André Yui Aihara</a>
+    <div class="issue">Laudos e frases</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="col">
+
+    <section class="hero">
+      <h1>Laudos padrão e frases</h1>
+      <p class="first">Modelos de laudo e frases descritivas para uso no dia a dia. Clique em <b>Copiar</b> e cole no seu sistema de laudo.</p>
+      <p>Os textos entre colchetes são campos a preencher. São modelos de partida, não normas — cada serviço tem o seu jeito, e o laudo é sempre responsabilidade de quem assina.</p>
+    </section>
+
+    <div class="lib-controls">
+      <input type="search" id="q" class="lib-search" placeholder="Buscar por achado, estrutura ou palavra…" aria-label="Buscar na biblioteca" autocomplete="off">
+      <div class="lib-filters" id="filters"></div>
+      <p class="lib-count" id="count"></p>
+    </div>
+
+    <div id="lib"></div>
+
+    <p class="lib-empty" id="empty" hidden>Nada encontrado com esses filtros.</p>
+
+    <footer class="site">
+      <a href="/">← Todos os casos</a><br><br>
+      André Yui Aihara · radiologia musculoesquelética<br>
+      Conteúdo educacional. Não substitui avaliação clínica nem laudo de um profissional habilitado.
+    </footer>
+  </div>
+</div>
+
+<script src="/assets/laudos.js"></script>
+<script>
+(function(){
+  var data = window.BIBLIOTECA || [];
+  var lib = document.getElementById('lib');
+  var q = document.getElementById('q');
+  var filtersBox = document.getElementById('filters');
+  var count = document.getElementById('count');
+  var empty = document.getElementById('empty');
+
+  var active = {tipo:'', regiao:'', metodo:''};
+
+  function uniq(key){
+    var seen = [];
+    data.forEach(function(d){ if(d[key] && seen.indexOf(d[key])<0) seen.push(d[key]); });
+    return seen.sort();
+  }
+
+  function buildFilters(){
+    var groups = [
+      {key:'tipo',   label:'Tipo',   values:[['laudo','Laudos'],['frase','Frases']]},
+      {key:'regiao', label:'Região', values:uniq('regiao').map(function(v){return [v,v]})},
+      {key:'metodo', label:'Método', values:uniq('metodo').map(function(v){return [v,v]})}
+    ];
+    groups.forEach(function(g){
+      var row = document.createElement('div');
+      row.className = 'lib-row';
+      var lbl = document.createElement('span');
+      lbl.className = 'lib-rowlabel';
+      lbl.textContent = g.label;
+      row.appendChild(lbl);
+      var all = mkBtn('Todos','',g.key);
+      all.setAttribute('aria-pressed','true');
+      row.appendChild(all);
+      g.values.forEach(function(v){ row.appendChild(mkBtn(v[1],v[0],g.key)); });
+      filtersBox.appendChild(row);
+    });
+  }
+
+  function mkBtn(label,value,key){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'lib-chip';
+    b.textContent = label;
+    b.setAttribute('aria-pressed', value===active[key] ? 'true' : 'false');
+    b.addEventListener('click', function(){
+      active[key] = value;
+      Array.prototype.forEach.call(b.parentNode.querySelectorAll('.lib-chip'), function(o){
+        o.setAttribute('aria-pressed','false');
+      });
+      b.setAttribute('aria-pressed','true');
+      render();
+    });
+    return b;
+  }
+
+  // busca sem acento: "pediculo" acha "pedículo"
+  function norm(s){
+    s = String(s).toLowerCase();
+    return s.normalize ? s.normalize('NFD').replace(/[̀-ͯ]/g,'') : s;
+  }
+
+  function matches(d){
+    if(active.tipo && d.tipo !== active.tipo) return false;
+    if(active.regiao && d.regiao !== active.regiao) return false;
+    if(active.metodo && d.metodo !== active.metodo) return false;
+    var term = norm(q.value.trim());
+    if(!term) return true;
+    var hay = norm([d.titulo, d.nota, d.texto, d.regiao, d.metodo].join(' '));
+    return term.split(/\s+/).every(function(t){ return hay.indexOf(t) >= 0; });
+  }
+
+  function render(){
+    var list = data.filter(matches);
+    lib.innerHTML = '';
+    list.forEach(function(d, n){ lib.appendChild(card(d, n)); });
+    count.textContent = list.length + (list.length === 1 ? ' item' : ' itens');
+    empty.hidden = list.length > 0;
+  }
+
+  function card(d, n){
+    var el = document.createElement('article');
+    el.className = 'lib-item';
+
+    var head = document.createElement('div');
+    head.className = 'lib-head';
+
+    var left = document.createElement('div');
+    var h = document.createElement('h2');
+    h.className = 'lib-title';
+    h.textContent = d.titulo;
+    left.appendChild(h);
+
+    var meta = document.createElement('div');
+    meta.className = 'lib-meta';
+    [d.regiao, d.metodo, d.tipo === 'laudo' ? 'Laudo' : 'Frase'].forEach(function(t){
+      var s = document.createElement('span');
+      s.className = 'chip';
+      s.textContent = t;
+      meta.appendChild(s);
+    });
+    if(d.nota){
+      var nt = document.createElement('span');
+      nt.className = 'lib-note';
+      nt.textContent = d.nota;
+      meta.appendChild(nt);
+    }
+    left.appendChild(meta);
+    head.appendChild(left);
+
+    var copy = document.createElement('button');
+    copy.type = 'button';
+    copy.className = 'lib-copy';
+    copy.textContent = 'Copiar';
+    copy.addEventListener('click', function(){
+      var done = function(ok){
+        copy.textContent = ok ? 'Copiado' : 'Selecione e copie';
+        copy.setAttribute('data-ok', ok ? 'true' : 'false');
+        setTimeout(function(){ copy.textContent = 'Copiar'; copy.removeAttribute('data-ok'); }, 1800);
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(d.texto).then(function(){done(true)}, function(){done(false)});
+      } else {
+        done(false);
+      }
+    });
+    head.appendChild(copy);
+    el.appendChild(head);
+
+    var pre = document.createElement('pre');
+    pre.className = 'lib-text';
+    pre.textContent = d.texto;
+    el.appendChild(pre);
+
+    return el;
+  }
+
+  q.addEventListener('input', render);
+  buildFilters();
+  render();
+})();
+</script>
+</body>
+</html>
