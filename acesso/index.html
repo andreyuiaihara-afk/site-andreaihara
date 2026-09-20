@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Acesso do grupo · Educação Continuada MSK DASA</title>
+<meta name="description" content="Acesso restrito aos médicos do grupo de radiologia musculoesquelética.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&display=swap">
+<link rel="stylesheet" href="/assets/style.css"></head><body>
+<header class="masthead"><div class="wrap"><a class="brand" href="/"><b>Radiologia MSK</b> — André Yui Aihara</a><div class="issue">Acesso restrito</div></div></header>
+<main class="wrap"><div class="col narrow">
+<section class="hero"><p class="eyebrow">Área dos médicos</p><h1>Educação Continuada MSK DASA</h1><p class="first">Entre com o e-mail que recebeu o convite. O cadastro é individual e restrito aos médicos autorizados.</p></section>
+<div class="login-box">
+  <p id="auth-status">Verificando acesso…</p>
+  <button class="primary-button" id="login" type="button" hidden>Entrar</button>
+  <button class="secondary-button" id="logout" type="button" hidden>Sair</button>
+  <p class="login-help">Se você ainda não recebeu convite, solicite a inclusão ao coordenador do grupo.</p>
+</div>
+<footer class="site"><a href="/">← Voltar ao site público</a></footer>
+</div></main>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+(function(){
+  var status=document.getElementById('auth-status');
+  var login=document.getElementById('login');
+  var logout=document.getElementById('logout');
+  if(!window.netlifyIdentity){status.textContent='A autenticação ainda não foi habilitada.';return;}
+  function rolesOf(user){
+    return user && user.app_metadata && Array.isArray(user.app_metadata.roles) ? user.app_metadata.roles : [];
+  }
+  function show(user){
+    if(!user){
+      status.textContent='Faça login para acessar o conteúdo do grupo.';
+      login.hidden=false; logout.hidden=true;
+      return;
+    }
+    login.hidden=true; logout.hidden=false;
+    if(rolesOf(user).indexOf('medico')>=0){
+      status.textContent='Acesso confirmado para '+user.email+'.';
+      window.location.assign('/grupo/');
+    }else{
+      status.textContent='Sua conta foi identificada, mas ainda não recebeu autorização para o grupo.';
+    }
+  }
+  window.netlifyIdentity.on('init',show);
+  window.netlifyIdentity.on('login',function(user){window.netlifyIdentity.close();show(user)});
+  window.netlifyIdentity.on('logout',function(){show(null)});
+  login.addEventListener('click',function(){window.netlifyIdentity.open('login')});
+  logout.addEventListener('click',function(){window.netlifyIdentity.logout()});
+  window.netlifyIdentity.init();
+})();
+</script></body></html>
