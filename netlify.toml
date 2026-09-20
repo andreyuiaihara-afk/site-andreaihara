@@ -51,6 +51,14 @@
   status = 301
   force = true
 
+
+# O conteúdo foi reclassificado de caso para resumo temático.
+[[redirects]]
+  from = "/casos/fratura-insuficiencia-vs-patologica/*"
+  to = "/resumos/fratura-insuficiencia-vs-patologica/:splat"
+  status = 301
+  force = true
+
 [[redirects]]
   from = "/grupo/*"
   to = "/grupo/:splat"
