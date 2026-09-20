@@ -11,6 +11,7 @@
 .password-form label{font:600 .88rem/1.3 "IBM Plex Sans",sans-serif}
 .password-form input{box-sizing:border-box;width:100%;padding:.8rem;border:1px solid #9aa3ad;border-radius:3px;background:#fff;font:1rem/1.3 "IBM Plex Sans",sans-serif}
 .password-message{margin:.25rem 0 0;font:500 .9rem/1.45 "IBM Plex Sans",sans-serif}
+.inline-password #netlify-identity-widget{display:none!important;visibility:hidden!important;pointer-events:none!important}
 </style></head><body>
 <header class="masthead"><div class="wrap"><a class="brand" href="/"><b>Radiologia MSK</b> — André Yui Aihara</a><div class="issue">Acesso restrito</div></div></header>
 <main class="wrap"><div class="col narrow">
@@ -72,6 +73,8 @@
   }
 
   function preparePasswordForm(){
+    document.body.classList.add('inline-password');
+    window.netlifyIdentity.close();
     login.hidden=true;
     logout.hidden=true;
     passwordForm.hidden=false;
