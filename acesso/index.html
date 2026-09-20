@@ -46,6 +46,8 @@
   var identityType=tokenMatch ? tokenMatch[1] : '';
   var identityToken=tokenMatch ? tokenMatch[2] : '';
   var identityAction=Boolean(tokenMatch);
+  var passwordChange=new URLSearchParams(window.location.search).get('alterar-senha')==='1';
+  if(passwordChange){identityAction=true;identityType='change';}
 
   if(!window.netlifyIdentity){status.textContent='A autenticação ainda não foi habilitada.';return;}
 
@@ -77,9 +79,9 @@
     passwordMessage.textContent='';
     status.textContent='Validando o link seguro…';
 
-    if(identityType==='invite'){
+    if(identityType==='invite' || identityType==='change'){
       savePassword.disabled=false;
-      status.textContent='Crie uma senha para concluir seu cadastro.';
+      status.textContent=identityType==='change' ? 'Defina uma nova senha para sua conta.' : 'Crie uma senha para concluir seu cadastro.';
       return;
     }
 
@@ -137,6 +139,12 @@
       window.netlifyIdentity.gotrue.acceptInvite(identityToken,newPassword.value,true).then(finishPassword).catch(failPassword);
       return;
     }
+    if(identityType==='change'){
+      var current=window.netlifyIdentity.currentUser();
+      if(!current){failPassword(new Error('Sua sessão expirou. Entre novamente e tente outra vez.'));return;}
+      current.update({password:newPassword.value}).then(finishPassword).catch(failPassword);
+      return;
+    }
 
     var recovered=window.netlifyIdentity.store && window.netlifyIdentity.store.recovered_user;
     if(!recovered){
@@ -147,7 +155,7 @@
   });
 
   window.netlifyIdentity.on('init',function(user){
-    if(identityAction && (identityType==='recovery' || identityType==='invite')){
+    if(identityAction && (identityType==='recovery' || identityType==='invite' || identityType==='change')){
       preparePasswordForm();
     }else{
       show(user,true);
