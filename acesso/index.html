@@ -23,11 +23,12 @@
   var status=document.getElementById('auth-status');
   var login=document.getElementById('login');
   var logout=document.getElementById('logout');
+  var identityAction=/^#(?:confirmation|invite|recovery|email_change)_token=/.test(window.location.hash);
   if(!window.netlifyIdentity){status.textContent='A autenticação ainda não foi habilitada.';return;}
   function rolesOf(user){
     return user && user.app_metadata && Array.isArray(user.app_metadata.roles) ? user.app_metadata.roles : [];
   }
-  function show(user){
+  function show(user,allowRedirect){
     if(!user){
       status.textContent='Faça login para acessar o conteúdo do grupo.';
       login.hidden=false; logout.hidden=true;
@@ -35,15 +36,28 @@
     }
     login.hidden=true; logout.hidden=false;
     if(rolesOf(user).indexOf('medico')>=0){
-      status.textContent='Acesso confirmado para '+user.email+'.';
-      window.location.assign('/grupo/');
+      if(allowRedirect){
+        status.textContent='Acesso confirmado para '+user.email+'.';
+        window.location.assign('/grupo/');
+      }else{
+        status.textContent='Conclua a definição da senha na janela aberta.';
+      }
     }else{
       status.textContent='Sua conta foi identificada, mas ainda não recebeu autorização para o grupo.';
     }
   }
-  window.netlifyIdentity.on('init',show);
-  window.netlifyIdentity.on('login',function(user){window.netlifyIdentity.close();show(user)});
-  window.netlifyIdentity.on('logout',function(){show(null)});
+  window.netlifyIdentity.on('init',function(user){show(user,!identityAction)});
+  window.netlifyIdentity.on('login',function(user){
+    if(identityAction){show(user,false);return;}
+    window.netlifyIdentity.close();show(user,true);
+  });
+  window.netlifyIdentity.on('close',function(){
+    if(!identityAction){return;}
+    identityAction=false;
+    if(window.history && window.history.replaceState){window.history.replaceState({},document.title,window.location.pathname);}
+    show(window.netlifyIdentity.currentUser(),true);
+  });
+  window.netlifyIdentity.on('logout',function(){show(null,true)});
   login.addEventListener('click',function(){window.netlifyIdentity.open('login')});
   logout.addEventListener('click',function(){window.netlifyIdentity.logout()});
   window.netlifyIdentity.init();
