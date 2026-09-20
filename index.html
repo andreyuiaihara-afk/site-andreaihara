@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Radiologia MSK · André Yui Aihara</title>
 <meta name="description" content="Casos, resumos e ferramentas de radiologia musculoesquelética para residentes, fellows e radiologistas.">
+<script>
+(function () {
+  var hash = window.location.hash;
+  if (/^#(?:confirmation|invite|recovery|email_change)_token=/.test(hash)) {
+    window.location.replace('/acesso/' + hash);
+  }
+})();
+</script>
 <meta property="og:title" content="Radiologia MSK · André Yui Aihara">
 <meta property="og:description" content="Casos, resumos e ferramentas de radiologia musculoesquelética para a prática.">
 <meta property="og:type" content="website">
