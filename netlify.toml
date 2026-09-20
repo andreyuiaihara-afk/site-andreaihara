@@ -15,19 +15,39 @@
 # Mantém públicos os links já compartilhados antes da reorganização.
 [[redirects]]
   from = "/grupo/pilulas/lesoes-meniscais/*"
-  to = "/resumos/lesoes-meniscais/:splat"
+  to = "/artigos/lesoes-meniscais/:splat"
   status = 301
   force = true
 
 [[redirects]]
   from = "/grupo/pilulas/instabilidade-lateral-tornozelo/*"
-  to = "/resumos/instabilidade-lateral-tornozelo/:splat"
+  to = "/artigos/instabilidade-lateral-tornozelo/:splat"
   status = 301
   force = true
 
 [[redirects]]
   from = "/grupo/pilulas/lesao-vertebral-hipointensa-t1/*"
-  to = "/resumos/lesao-vertebral-hipointensa-t1/:splat"
+  to = "/artigos/lesao-vertebral-hipointensa-t1/:splat"
+  status = 301
+  force = true
+
+
+# Preserva os links públicos já enviados antes da nova categoria.
+[[redirects]]
+  from = "/resumos/lesoes-meniscais/*"
+  to = "/artigos/lesoes-meniscais/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/resumos/instabilidade-lateral-tornozelo/*"
+  to = "/artigos/instabilidade-lateral-tornozelo/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/resumos/lesao-vertebral-hipointensa-t1/*"
+  to = "/artigos/lesao-vertebral-hipointensa-t1/:splat"
   status = 301
   force = true
 
