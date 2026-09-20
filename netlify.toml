@@ -12,6 +12,25 @@
     X-Robots-Tag = "noindex, nofollow"
     Cache-Control = "private, no-store"
 
+# Mantém públicos os links já compartilhados antes da reorganização.
+[[redirects]]
+  from = "/grupo/pilulas/lesoes-meniscais/*"
+  to = "/resumos/lesoes-meniscais/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/grupo/pilulas/instabilidade-lateral-tornozelo/*"
+  to = "/resumos/instabilidade-lateral-tornozelo/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/grupo/pilulas/lesao-vertebral-hipointensa-t1/*"
+  to = "/resumos/lesao-vertebral-hipointensa-t1/:splat"
+  status = 301
+  force = true
+
 [[redirects]]
   from = "/grupo/*"
   to = "/grupo/:splat"
@@ -21,6 +40,6 @@
 
 [[redirects]]
   from = "/grupo/*"
-  to = "/acesso/"
+  to = "/acesso/?next=/grupo/:splat"
   status = 302
   force = true

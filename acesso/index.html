@@ -47,7 +47,10 @@
   var identityType=tokenMatch ? tokenMatch[1] : '';
   var identityToken=tokenMatch ? tokenMatch[2] : '';
   var identityAction=Boolean(tokenMatch);
-  var passwordChange=new URLSearchParams(window.location.search).get('alterar-senha')==='1';
+  var queryParams=new URLSearchParams(window.location.search);
+  var passwordChange=queryParams.get('alterar-senha')==='1';
+  var nextPath=queryParams.get('next')||'/grupo/';
+  if(!/^\/grupo(?:\/|$)/.test(nextPath)){nextPath='/grupo/';}
   if(passwordChange){identityAction=true;identityType='change';}
 
   if(!window.netlifyIdentity){status.textContent='A autenticação ainda não foi habilitada.';return;}
@@ -66,7 +69,7 @@
     login.hidden=true; logout.hidden=false; passwordForm.hidden=true;
     if(rolesOf(user).indexOf('medico')>=0){
       status.textContent='Acesso confirmado para '+user.email+'.';
-      if(allowRedirect){window.location.assign('/grupo/');}
+      if(allowRedirect){window.location.assign(nextPath);}
     }else{
       status.textContent='Sua conta foi identificada, mas ainda não recebeu autorização para o grupo.';
     }
@@ -116,7 +119,7 @@
     }
     passwordForm.hidden=true;
     status.textContent='Senha cadastrada com sucesso. Abrindo a área restrita…';
-    window.setTimeout(function(){window.location.assign('/grupo/');},900);
+    window.setTimeout(function(){window.location.assign(nextPath);},900);
   }
 
   function failPassword(error){
