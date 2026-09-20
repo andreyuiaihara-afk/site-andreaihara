@@ -5,7 +5,13 @@
 <meta name="description" content="Acesso restrito aos médicos do grupo de radiologia musculoesquelética.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&display=swap">
-<link rel="stylesheet" href="/assets/style.css"></head><body>
+<link rel="stylesheet" href="/assets/style.css"><style>
+.password-form{display:grid;gap:.7rem;max-width:28rem;margin:1.25rem 0}
+.password-form[hidden]{display:none}
+.password-form label{font:600 .88rem/1.3 "IBM Plex Sans",sans-serif}
+.password-form input{box-sizing:border-box;width:100%;padding:.8rem;border:1px solid #9aa3ad;border-radius:3px;background:#fff;font:1rem/1.3 "IBM Plex Sans",sans-serif}
+.password-message{margin:.25rem 0 0;font:500 .9rem/1.45 "IBM Plex Sans",sans-serif}
+</style></head><body>
 <header class="masthead"><div class="wrap"><a class="brand" href="/"><b>Radiologia MSK</b> — André Yui Aihara</a><div class="issue">Acesso restrito</div></div></header>
 <main class="wrap"><div class="col narrow">
 <section class="hero"><p class="eyebrow">Área dos médicos</p><h1>Educação Continuada MSK DASA</h1><p class="first">Entre com o e-mail que recebeu o convite. O cadastro é individual e restrito aos médicos autorizados.</p></section>
@@ -13,6 +19,14 @@
   <p id="auth-status">Verificando acesso…</p>
   <button class="primary-button" id="login" type="button" hidden>Entrar</button>
   <button class="secondary-button" id="logout" type="button" hidden>Sair</button>
+  <form id="password-form" class="password-form" hidden>
+    <label for="new-password">Nova senha</label>
+    <input id="new-password" type="password" autocomplete="new-password" minlength="8" required>
+    <label for="confirm-password">Confirmar nova senha</label>
+    <input id="confirm-password" type="password" autocomplete="new-password" minlength="8" required>
+    <button class="primary-button" id="save-password" type="submit">Salvar nova senha</button>
+    <p id="password-message" class="password-message" role="status"></p>
+  </form>
   <p class="login-help">Se você ainda não recebeu convite, solicite a inclusão ao coordenador do grupo.</p>
 </div>
 <footer class="site"><a href="/">← Voltar ao site público</a></footer>
@@ -23,43 +37,139 @@
   var status=document.getElementById('auth-status');
   var login=document.getElementById('login');
   var logout=document.getElementById('logout');
-  var identityAction=/^#(?:confirmation|invite|recovery|email_change)_token=/.test(window.location.hash);
+  var passwordForm=document.getElementById('password-form');
+  var newPassword=document.getElementById('new-password');
+  var confirmPassword=document.getElementById('confirm-password');
+  var savePassword=document.getElementById('save-password');
+  var passwordMessage=document.getElementById('password-message');
+  var tokenMatch=window.location.hash.match(/^#\/?(confirmation|invite|recovery|email_change)_token=([^&]+)/);
+  var identityType=tokenMatch ? tokenMatch[1] : '';
+  var identityToken=tokenMatch ? tokenMatch[2] : '';
+  var identityAction=Boolean(tokenMatch);
+
   if(!window.netlifyIdentity){status.textContent='A autenticação ainda não foi habilitada.';return;}
+
   function rolesOf(user){
     return user && user.app_metadata && Array.isArray(user.app_metadata.roles) ? user.app_metadata.roles : [];
   }
+
   function show(user,allowRedirect){
+    if(identityAction){return;}
     if(!user){
       status.textContent='Faça login para acessar o conteúdo do grupo.';
-      login.hidden=false; logout.hidden=true;
+      login.hidden=false; logout.hidden=true; passwordForm.hidden=true;
       return;
     }
-    login.hidden=true; logout.hidden=false;
+    login.hidden=true; logout.hidden=false; passwordForm.hidden=true;
     if(rolesOf(user).indexOf('medico')>=0){
-      if(allowRedirect){
-        status.textContent='Acesso confirmado para '+user.email+'.';
-        window.location.assign('/grupo/');
-      }else{
-        status.textContent='Conclua a definição da senha na janela aberta.';
-      }
+      status.textContent='Acesso confirmado para '+user.email+'.';
+      if(allowRedirect){window.location.assign('/grupo/');}
     }else{
       status.textContent='Sua conta foi identificada, mas ainda não recebeu autorização para o grupo.';
     }
   }
-  window.netlifyIdentity.on('init',function(user){show(user,!identityAction)});
+
+  function preparePasswordForm(){
+    login.hidden=true;
+    logout.hidden=true;
+    passwordForm.hidden=false;
+    savePassword.disabled=true;
+    passwordMessage.textContent='';
+    status.textContent='Validando o link seguro…';
+
+    if(identityType==='invite'){
+      savePassword.disabled=false;
+      status.textContent='Crie uma senha para concluir seu cadastro.';
+      return;
+    }
+
+    var attempts=0;
+    var timer=window.setInterval(function(){
+      attempts+=1;
+      var recovered=window.netlifyIdentity.store && window.netlifyIdentity.store.recovered_user;
+      if(recovered){
+        window.clearInterval(timer);
+        savePassword.disabled=false;
+        status.textContent='Crie uma nova senha para sua conta.';
+      }else if(attempts>=150){
+        window.clearInterval(timer);
+        status.textContent='Não foi possível validar este link. Solicite um novo e-mail de recuperação.';
+        passwordForm.hidden=true;
+        login.hidden=false;
+      }
+    },100);
+  }
+
+  function finishPassword(user){
+    var details=user && user.tokenDetails ? user.tokenDetails() : null;
+    if(details && details.access_token){
+      document.cookie='nf_jwt='+details.access_token+'; path=/; secure; SameSite=Lax';
+    }
+    identityAction=false;
+    if(window.history && window.history.replaceState){
+      window.history.replaceState({},document.title,window.location.pathname);
+    }
+    passwordForm.hidden=true;
+    status.textContent='Senha cadastrada com sucesso. Abrindo a área restrita…';
+    window.setTimeout(function(){window.location.assign('/grupo/');},900);
+  }
+
+  function failPassword(error){
+    savePassword.disabled=false;
+    passwordMessage.textContent=(error && error.message) ? error.message : 'Não foi possível salvar a senha. Solicite um novo link e tente novamente.';
+  }
+
+  passwordForm.addEventListener('submit',function(event){
+    event.preventDefault();
+    passwordMessage.textContent='';
+    if(newPassword.value.length<8){
+      passwordMessage.textContent='Use pelo menos 8 caracteres.';
+      return;
+    }
+    if(newPassword.value!==confirmPassword.value){
+      passwordMessage.textContent='As senhas não coincidem.';
+      return;
+    }
+    savePassword.disabled=true;
+    passwordMessage.textContent='Salvando…';
+
+    if(identityType==='invite'){
+      window.netlifyIdentity.gotrue.acceptInvite(identityToken,newPassword.value,true).then(finishPassword).catch(failPassword);
+      return;
+    }
+
+    var recovered=window.netlifyIdentity.store && window.netlifyIdentity.store.recovered_user;
+    if(!recovered){
+      failPassword(new Error('O link ainda não foi validado. Aguarde alguns segundos ou solicite um novo e-mail.'));
+      return;
+    }
+    recovered.update({password:newPassword.value}).then(finishPassword).catch(failPassword);
+  });
+
+  window.netlifyIdentity.on('init',function(user){
+    if(identityAction && (identityType==='recovery' || identityType==='invite')){
+      preparePasswordForm();
+    }else{
+      show(user,true);
+    }
+  });
+  window.netlifyIdentity.on('open',function(page){
+    if(identityAction && (page==='recovery' || page==='invite')){
+      window.netlifyIdentity.close();
+    }
+  });
   window.netlifyIdentity.on('login',function(user){
-    if(identityAction){show(user,false);return;}
+    if(identityAction){return;}
     window.netlifyIdentity.close();show(user,true);
   });
-  window.netlifyIdentity.on('close',function(){
-    if(!identityAction){return;}
-    identityAction=false;
-    if(window.history && window.history.replaceState){window.history.replaceState({},document.title,window.location.pathname);}
-    show(window.netlifyIdentity.currentUser(),true);
+  window.netlifyIdentity.on('logout',function(){
+    if(!identityAction){show(null,true);}
   });
-  window.netlifyIdentity.on('logout',function(){show(null,true)});
-  login.addEventListener('click',function(){window.netlifyIdentity.open('login')});
-  logout.addEventListener('click',function(){window.netlifyIdentity.logout()});
+  window.netlifyIdentity.on('error',function(error){
+    if(identityAction && error){failPassword(error);}
+  });
+  login.addEventListener('click',function(){window.netlifyIdentity.open('login');});
+  logout.addEventListener('click',function(){window.netlifyIdentity.logout();});
   window.netlifyIdentity.init();
 })();
 </script></body></html>
