@@ -5,3 +5,22 @@
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/grupo/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "private, no-store"
+
+[[redirects]]
+  from = "/grupo/*"
+  to = "/grupo/:splat"
+  status = 200
+  force = true
+  conditions = {Role = ["medico"]}
+
+[[redirects]]
+  from = "/grupo/*"
+  to = "/acesso/"
+  status = 302
+  force = true
