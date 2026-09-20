@@ -24,18 +24,25 @@
   var login=document.getElementById('login');
   var logout=document.getElementById('logout');
   if(!window.netlifyIdentity){status.textContent='A autenticação ainda não foi habilitada.';return;}
+  function rolesOf(user){
+    return user && user.app_metadata && Array.isArray(user.app_metadata.roles) ? user.app_metadata.roles : [];
+  }
   function show(user){
-    if(user){
-      status.textContent='Acesso confirmado para '+user.email+'.';
-      login.hidden=true; logout.hidden=false;
-      window.location.assign('/grupo/');
-    }else{
+    if(!user){
       status.textContent='Faça login para acessar o conteúdo do grupo.';
       login.hidden=false; logout.hidden=true;
+      return;
+    }
+    login.hidden=true; logout.hidden=false;
+    if(rolesOf(user).indexOf('medico')>=0){
+      status.textContent='Acesso confirmado para '+user.email+'.';
+      window.location.assign('/grupo/');
+    }else{
+      status.textContent='Sua conta foi identificada, mas ainda não recebeu autorização para o grupo.';
     }
   }
   window.netlifyIdentity.on('init',show);
-  window.netlifyIdentity.on('login',function(user){show(user)});
+  window.netlifyIdentity.on('login',function(user){window.netlifyIdentity.close();show(user)});
   window.netlifyIdentity.on('logout',function(){show(null)});
   login.addEventListener('click',function(){window.netlifyIdentity.open('login')});
   logout.addEventListener('click',function(){window.netlifyIdentity.logout()});
