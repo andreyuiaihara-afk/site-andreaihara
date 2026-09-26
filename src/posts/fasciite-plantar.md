@@ -1,9 +1,15 @@
 ---
-title: "Fasciíte plantar: o diagnóstico é clínico, então para que serve a ressonância?"
-summary: "O exame não existe para confirmar o óbvio. Existe para encontrar as três coisas que mudam a conduta."
+title: "Fasciíte plantar: o diagnóstico é clínico, então para que serve a
+  ressonância?"
+summary: O exame não existe para confirmar o óbvio. Existe para encontrar as
+  três coisas que mudam a conduta. Teste
 section: casos
 permalink: /casos/fasciite-plantar/
-tags: ["Fasciíte plantar","Retropé","RM","R3 e acima"]
+tags:
+  - Fasciíte plantar
+  - Retropé
+  - RM
+  - R3 e acima
 visibility: public
 order: 5
 ---
