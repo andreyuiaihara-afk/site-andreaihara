@@ -56,17 +56,15 @@ automaticamente. Alterar `section` muda a lista em que o texto aparece; preserve
 - `npm run build` gera `_site/` para publicação no Netlify.
 - `python scripts/verify-build.py` compara texto e imagens dos artigos migrados
   com as páginas atuais e confere os links locais.
-- `/admin/` contém o painel Decap CMS conectado ao Decap Turbo Free nesta branch.
+- `/admin/` contém o painel Decap CMS conectado ao Decap Turbo Free.
   O backend `turbo-github` usa a versão beta do CMS. O Site ID não é segredo;
   a instalação GitHub App foi limitada pelo proprietário ao repositório do site.
-  Nesta fase, o editor grava em `codex/editorial-cms` e aponta para a prévia
-  do PR #13. Validar login, uma atualização de texto, upload de imagem e o
-  fluxo de rascunho/revisão/publicação antes de integrar à `main`.
-
-  Antes de publicar, mudar `backend.branch` para `main`, mudar `site_url` para
-  `https://andreaihara.com.br`, e incluir
-  `https://andreaihara.com.br/admin/` nas Admin interface URL(s) do site no
-  Decap Turbo. Confirmar o estado de publicação no site de produção após o build.
+  O login, a lista de conteúdos e a criação de um rascunho foram validados na
+  prévia do PR #13. O rascunho de teste foi fechado sem publicação. Após a
+  integração, o editor grava em `main` e aponta para o domínio público.
+  Incluir `https://andreaihara.com.br/admin/` nas Admin interface URL(s) do
+  site no Decap Turbo antes de entrar no editor de produção. Confirmar o build
+  de produção e testar o upload de imagem com uma publicação real.
 
 A migração de hospedagem requer adaptar a autenticação dos médicos: `/grupo/`
 ainda depende de Netlify Identity e dos redirecionamentos por papel em

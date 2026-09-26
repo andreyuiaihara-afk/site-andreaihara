@@ -1,13 +1,13 @@
 backend:
   name: turbo-github
   turbo_site_id: 935b9981-b22a-46c6-b1cf-7bb5f338e9ec
-  branch: codex/editorial-cms
+  branch: main
 
 local_backend: true
 publish_mode: editorial_workflow
 media_folder: assets/img
 public_folder: /assets/img
-site_url: https://deploy-preview-13--andreaihara.netlify.app
+site_url: https://andreaihara.com.br
 locale: pt
 
 collections:
