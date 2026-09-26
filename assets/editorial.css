@@ -1,0 +1,7 @@
+article figure{margin:2.4em 0;padding:0}
+article figure img{display:block;max-width:100%;height:auto;border:1px solid var(--line);border-radius:3px;background:var(--surface)}
+article figcaption{font-family:var(--sans);font-size:.85rem;line-height:1.5;color:var(--muted);margin-top:10px}
+article figcaption .src{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.03em;color:var(--muted);margin-top:6px}
+article table{display:block;overflow-x:auto;border-collapse:collapse;max-width:100%}
+article th,article td{padding:.5rem;border:1px solid var(--line);text-align:left}
+article p,article li{overflow-wrap:break-word}

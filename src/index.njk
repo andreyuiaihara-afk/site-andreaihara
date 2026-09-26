@@ -1,0 +1,15 @@
+---
+layout: base.njk
+title: Início
+permalink: /
+---
+<section class="hero"><p class="eyebrow">Educação continuada</p><h1>Radiologia musculoesquelética para a prática</h1><p class="first">Casos comentados, revisões temáticas e ferramentas para transformar achados de imagem em laudos que ajudam na decisão clínica.</p><p>Conteúdo de André Yui Aihara para residentes, fellows e radiologistas em atividade. As imagens publicadas são de casos didáticos anonimizados.</p></section>
+<p class="section-label">Explorar o acervo</p><div class="hub-grid">
+<a class="hub-card" href="/casos/"><span class="hub-kicker">Casos</span><h2>Casos comentados</h2><p>Achado, raciocínio diagnóstico, diferenciais e o que precisa constar no laudo.</p></a>
+<a class="hub-card" href="/resumos/"><span class="hub-kicker">Estudo</span><h2>Resumos temáticos</h2><p>Revisões organizadas por método, região anatômica e aplicação prática.</p></a>
+<a class="hub-card" href="/artigos/"><span class="hub-kicker">Literatura</span><h2>Artigos comentados</h2><p>Sínteses críticas de publicações recentes e sua aplicação na prática.</p></a>
+<a class="hub-card" href="/laudos/"><span class="hub-kicker">Ferramentas</span><h2>Laudos e frases</h2><p>Modelos pesquisáveis e prontos para copiar, adaptar e revisar.</p></a>
+<a class="hub-card private" href="/acesso/" style="grid-column:1/-1"><span class="hub-kicker">Acesso restrito</span><h2>Educação Continuada MSK DASA</h2><p>Materiais exclusivos, protocolos internos e padronizações para os médicos do grupo.</p></a></div>
+<p class="section-label section-space">Publicações em destaque</p><ul class="postlist">
+{% for post in collections.publicPosts | take(5) %}<li><a class="card" href="{{ post.url }}"><h2>{{ post.data.title }}</h2><p>{{ post.data.summary }}</p><div class="meta">{% for tag in post.data.tags | take(3) %}<span class="chip{% if loop.first %} key{% endif %}">{{ tag }}</span>{% endfor %}</div></a></li>{% endfor %}
+</ul><footer class="site">André Yui Aihara · radiologia musculoesquelética<br>Conteúdo educacional. Não substitui avaliação clínica nem laudo de um profissional habilitado.</footer>

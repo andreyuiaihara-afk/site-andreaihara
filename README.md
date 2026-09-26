@@ -43,3 +43,28 @@ netlify.toml
 - Restrito: manter sob `grupo/assets/`, para permanecer dentro da rota protegida.
 - Usar WebP, no máximo 1600 px, removendo metadados.
 - Publicar somente casos didáticos completamente anonimizados.
+
+## Editor e geração do site (proposta em branch)
+
+Os sete textos públicos atuais estão em `src/posts/*.md`. Título, resumo, seção,
+ordem, etiquetas e endereço permanente ficam no cabeçalho de cada arquivo; o
+corpo aceita Markdown e imagens. A página inicial e as três listas são geradas
+automaticamente. Alterar `section` muda a lista em que o texto aparece; preserve
+`permalink` quando o link já foi compartilhado.
+
+- `npm ci` instala as dependências fixadas no projeto.
+- `npm run build` gera `_site/` para publicação no Netlify.
+- `python scripts/verify-build.py` compara texto e imagens dos artigos migrados
+  com as páginas atuais e confere os links locais.
+- `/admin/` contém o painel Decap CMS. Antes de usar no site, configurar a
+  autenticação GitHub do editor para o proprietário do repositório e conferir
+  o fluxo de rascunho/revisão/publicação numa prévia. O editor não está ativo
+  no domínio enquanto esta branch não for integrada e autenticada.
+
+A migração de hospedagem requer adaptar a autenticação dos médicos: `/grupo/`
+ainda depende de Netlify Identity e dos redirecionamentos por papel em
+`netlify.toml`. Nunca publique material interno no repositório GitHub público.
+Antes de criar conteúdo restrito novo, torne o repositório privado e valide a
+proteção da URL pública, dos arquivos de mídia e dos endereços de prévia. O
+Cloudflare Pages aceita repositórios privados, mas não interpreta a regra de
+papéis do Netlify. Não aponte o domínio para outra hospedagem antes do teste.

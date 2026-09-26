@@ -1,0 +1,42 @@
+backend:
+  name: github
+  repo: andreyuiaihara-afk/site-andreaihara
+  branch: main
+
+local_backend: true
+publish_mode: editorial_workflow
+media_folder: assets/img
+public_folder: /assets/img
+site_url: https://andreaihara.com.br
+locale: pt
+
+collections:
+  - name: publicacoes
+    label: Publicações públicas
+    label_singular: Publicação
+    folder: src/posts
+    create: true
+    extension: md
+    format: frontmatter
+    slug: '{{slug}}'
+    identifier_field: title
+    summary: '{{title}} — {{section}}'
+    fields:
+      - {label: Título, name: title, widget: string}
+      - {label: Resumo curto, name: summary, widget: text}
+      - label: Seção
+        name: section
+        widget: select
+        options:
+          - {label: Casos comentados, value: casos}
+          - {label: Resumos de temas, value: resumos}
+          - {label: Artigos comentados, value: artigos}
+      - label: Endereço permanente
+        name: permalink
+        widget: string
+        hint: 'Use /secao/nome-do-conteudo/. Para um artigo já compartilhado, mantenha o endereço original ao mudar de seção.'
+        pattern: ['^/(casos|resumos|artigos)/[a-z0-9-]+/$', 'Use /secao/nome-do-conteudo/']
+      - {label: Etiquetas, name: tags, widget: list, field: {label: Etiqueta, name: tag, widget: string}}
+      - {label: Visibilidade, name: visibility, widget: hidden, default: public}
+      - {label: Ordem de destaque, name: order, widget: number, value_type: int, min: 1, default: 99}
+      - {label: Texto e imagens, name: body, widget: markdown}

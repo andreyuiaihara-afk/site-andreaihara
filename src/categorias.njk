@@ -1,0 +1,14 @@
+---
+layout: base.njk
+pagination:
+  data: sections
+  size: 1
+  alias: category
+permalink: "/{{ category.slug }}/"
+eleventyComputed:
+  title: "{{ category.title }}"
+  summary: "{{ category.description }}"
+---
+<section class="hero"><p class="eyebrow">Acervo</p><h1>{{ category.title }}</h1><p class="first">{{ category.description }}</p></section>
+<ul class="postlist">{% for post in collections.publicPosts | bySection(category.slug) %}<li><a class="card" href="{{ post.url }}"><h2>{{ post.data.title }}</h2><p>{{ post.data.summary }}</p><div class="meta">{% for tag in post.data.tags | take(3) %}<span class="chip{% if loop.first %} key{% endif %}">{{ tag }}</span>{% endfor %}</div></a></li>{% endfor %}</ul>
+<footer class="site"><a href="/">← Início</a><br><br>André Yui Aihara · radiologia musculoesquelética</footer>
