@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }} · Radiologia MSK</title>
+<meta name="description" content="{{ summary or 'Radiologia musculoesquelética para a prática.' }}">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&display=swap">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="/assets/editorial.css">
+</head>
+<body>
+<header class="masthead"><div class="wrap"><a class="brand" href="/"><b>Radiologia MSK</b> — André Yui Aihara</a>
+<nav class="site-nav" aria-label="Navegação principal"><a href="/casos/">Casos</a><a href="/resumos/">Resumos</a><a href="/artigos/">Artigos</a><a href="/laudos/">Laudos e frases</a><a href="/acesso/">Área do grupo</a></nav></div></header>
+<main class="wrap"><div class="col">{{ content | safe }}</div></main>
+</body></html>

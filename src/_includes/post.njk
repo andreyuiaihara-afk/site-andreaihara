@@ -1,0 +1,9 @@
+---
+layout: base.njk
+---
+<header class="post"><div class="chips">
+{% for tag in tags %}<span class="chip{% if loop.first %} key{% endif %}">{{ tag }}</span>{% endfor %}
+</div><h1 class="title">{{ title }}</h1><p class="dek">{{ summary }}</p>
+<div class="byline"><b>André Yui Aihara</b><span class="sep">·</span><span>Conteúdo educacional</span></div></header>
+<article>{{ content | safe }}</article>
+<footer class="site"><a href="/{{ section }}/">← Voltar</a><br><br>André Yui Aihara · radiologia musculoesquelética<br>Conteúdo educacional. Não substitui avaliação clínica nem laudo de um profissional habilitado.</footer>

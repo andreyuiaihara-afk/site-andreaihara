@@ -1,7 +1,3 @@
-.DS_Store
-Thumbs.db
-desktop.ini
-*.tmp
-~$*
+_site/
 node_modules/
-Claude outputs/
+.DS_Store

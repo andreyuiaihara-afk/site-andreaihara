@@ -1,0 +1,5 @@
+[
+  {"slug":"casos","title":"Casos comentados","description":"Casos organizados para mostrar o raciocínio, as armadilhas e o impacto do achado no laudo."},
+  {"slug":"resumos","title":"Resumos de temas","description":"Revisões autorais organizadas por região, método e aplicação prática."},
+  {"slug":"artigos","title":"Artigos comentados","description":"Sínteses críticas de artigos publicados, com contexto, principais achados e implicações para a prática."}
+]
