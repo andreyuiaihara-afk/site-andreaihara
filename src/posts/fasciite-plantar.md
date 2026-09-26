@@ -2,7 +2,7 @@
 title: "Fasciíte plantar: o diagnóstico é clínico, então para que serve a
   ressonância?"
 summary: O exame não existe para confirmar o óbvio. Existe para encontrar as
-  três coisas que mudam a conduta. Teste
+  três coisas que mudam a conduta.
 section: casos
 permalink: /casos/fasciite-plantar/
 tags:
