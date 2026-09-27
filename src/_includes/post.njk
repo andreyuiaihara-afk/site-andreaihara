@@ -7,3 +7,42 @@ layout: base.njk
 <div class="byline"><b>André Yui Aihara</b><span class="sep">·</span><span>Conteúdo educacional</span></div></header>
 <article>{{ content | safe }}</article>
 <footer class="site"><a href="/{{ section }}/">← Voltar</a><br><br>André Yui Aihara · radiologia musculoesquelética<br>Conteúdo educacional. Não substitui avaliação clínica nem laudo de um profissional habilitado.</footer>
+<script>
+document.querySelectorAll('.viewer').forEach(function(viewer) {
+  var stage = viewer.querySelector('.stage');
+  var slides = Array.from(viewer.querySelectorAll('.slide'));
+  var dotsBox = viewer.querySelector('.dots');
+  var counter = viewer.querySelector('.counter');
+  if (!stage || !dotsBox || !counter || !slides.length) return;
+  var current = 0;
+  slides.forEach(function(_, index) {
+    var dot = document.createElement('button');
+    dot.className = 'dot';
+    dot.type = 'button';
+    dot.setAttribute('role', 'tab');
+    dot.setAttribute('aria-label', 'Imagem ' + (index + 1));
+    dot.addEventListener('click', function() { show(index); });
+    dotsBox.appendChild(dot);
+  });
+  var dots = Array.from(dotsBox.children);
+  function show(index) {
+    current = (index + slides.length) % slides.length;
+    slides.forEach(function(slide, n) {
+      slide.setAttribute('data-active', n === current ? 'true' : 'false');
+    });
+    dots.forEach(function(dot, n) {
+      dot.setAttribute('aria-current', n === current ? 'true' : 'false');
+    });
+    counter.textContent = (current + 1) + ' / ' + slides.length;
+  }
+  var previous = stage.querySelector('.prev');
+  var next = stage.querySelector('.next');
+  if (previous) previous.addEventListener('click', function() { show(current - 1); });
+  if (next) next.addEventListener('click', function() { show(current + 1); });
+  stage.addEventListener('keydown', function(event) {
+    if (event.key === 'ArrowLeft') { event.preventDefault(); show(current - 1); }
+    if (event.key === 'ArrowRight') { event.preventDefault(); show(current + 1); }
+  });
+  show(0);
+});
+</script>
