@@ -5,3 +5,5 @@ article figcaption .src{display:block;font-family:var(--mono);font-size:10.5px;l
 article table{display:block;overflow-x:auto;border-collapse:collapse;max-width:100%}
 article th,article td{padding:.5rem;border:1px solid var(--line);text-align:left}
 article p,article li{overflow-wrap:break-word}
+.case-image-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:10px;align-items:center}
+.case-image-grid img{width:100%;object-fit:contain}
